@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de QR Code</title>
+
+    <!-- CSS Geral -->
+    <link rel="stylesheet" href="style/style.css">
+
+    <!-- Lib do QR Code Styling -->
+    <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
+</head>
+
+<body>
+
+    <!-- ========================== -->
+    <!--  TELA INICIAL DO GERADOR  -->
+    <!-- ========================== -->
+    <div class="inicial">
+
+        <div class="container">
+            <h1>Gerador de QR Code</h1>
+
+            <select id="tipo">
+                <option value="texto">Texto normal</option>
+                <option value="spotify">Spotify (música / playlist)</option>
+                <option value="foto">Foto / Imagem via URL</option>
+                <option value="link">Link / URL</option>
+                <option value="whatsapp">WhatsApp</option>
+                <option value="email">E-mail</option>
+                <option value="telefone">Telefone</option>
+            </select>
+
+            <input id="texto" type="text" placeholder="Digite algo para gerar QR">
+
+            <button onclick="gerarQRCode()">Gerar QR Code</button>
+        </div>
+
+    </div>
+
+
+
+    <!-- ========================== -->
+    <!--  ÁREA DE CUSTOMIZAÇÃO     -->
+    <!-- ========================== -->
+    <div class="layout" style="display:none;">
+
+        <!-- PREVIEW À ESQUERDA -->
+        <div class="preview-area">
+            <h1>Seu QR Code</h1>
+
+            <div id="preview" class="preview-box">
+                <div id="qr-wrapper">
+                    <div id="qr-container"></div>
+                    <p id="qr-label"></p>
+                </div>
+            </div>
+
+            <button id="buttonBaixar" onclick="baixar()">Baixar QR Code</button>
+        </div>
+
+
+        <!-- CONTROLES À DIREITA -->
+        <div class="editor">
+
+            <h2>Personalizar</h2>
+
+            <label>Cor principal:</label>
+            <button class="colorButton" onclick="abrirPicker('cor')">Alterar cor principal</button>
+
+
+            <label>Cor de fundo:</label>
+            <button class="colorButton" onclick="abrirPicker('bg')">Alterar cor de fundo</button>
+
+            <label>Cor da borda:</label>
+            <button class="colorButton" onclick="abrirPicker('border')">Alterar Cor da borda</button>
+
+            <div id="colorPickerPanel">
+                <input type="color" id="colorPickerInput" oninput="aplicarCor()" />
+                <button onclick="fecharPicker()">Fechar</button>
+            </div>
+
+            <label>Texto abaixo do QR:</label>
+            <input type="text" id="qr-text" placeholder="Ex: Escaneie aqui">
+
+            <label>Texto em Negrito:</label>
+            <input type="checkbox" id="bold-text">
+
+            <label>Espessura da borda:</label>
+            <input type="range" id="border-size" min="0" max="20" value="2">
+
+            <label>Arredondamento da borda:</label>
+            <input type="range" id="border-radius" min="0" max="30" value="10">
+
+            <label>Formato dos Pontos:</label>
+            <select id="shape">
+                <option value="square">Quadrado</option>
+                <option value="dots">Pontos</option>
+                <option value="rounded">Arredondado</option>
+            </select>
+
+            <label>Tamanho do QR:</label>
+            <input type="range" id="size" min="150" max="350" value="250">
+
+            <div class="logo-controls">
+                <label>Adicionar Logo:</label>
+                <input type="file" id="logo" accept="image/*">
+                <button id="removerLogo" onclick="removerLogo()">Remover Logo</button>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- JS da página -->
+    <script src="js/script.js"></script>
+
+</body>
+
+</html>
