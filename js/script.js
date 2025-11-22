@@ -76,7 +76,7 @@ function iniciarCustomizacao(texto) {
     // Apaga possível QR anterior
     document.getElementById("qr-container").innerHTML = "";
 
-    // Instancia o QR Code inicial e Renderiza
+    // Instancia o QR Code inicial e Renderiza (com as cores atuais)
     qr = new QRCodeStyling({
         width: 250,
         height: 250,
@@ -138,13 +138,22 @@ function atualizarQRCode() {
     const shape = document.getElementById("shape").value;
     const borderSize = document.getElementById("border-size").value;
     const radius = document.getElementById("border-radius").value;
+
+    // NOVOS VALORES DE TEXTO:
     const labelText = document.getElementById("qr-text").value;
-    const bold = document.getElementById("bold-text").checked;
+    const fontWeight = document.getElementById("font-weight").value; // 'normal' ou 'bold'
+    const fontFamily = document.getElementById("font-family").value;
+    const fontSize = document.getElementById("font-size").value;
+    // FIM NOVOS VALORES DE TEXTO
 
     // Atualiza texto
     const label = document.getElementById("qr-label");
     label.innerText = labelText;
-    label.style.fontWeight = bold ? "bold" : "normal";
+
+    // APLICA OS NOVOS ESTILOS DE TEXTO
+    label.style.fontWeight = fontWeight;
+    label.style.fontFamily = fontFamily;
+    label.style.fontSize = fontSize + "px"; // Adiciona 'px'
 
     // Borda do wrapper
     wrapper.style.borderWidth = borderSize + "px";
@@ -163,33 +172,22 @@ function atualizarQRCode() {
 // =============================
 //  PICKERS DE COR
 // =============================
-let campoAtual = null;
-
-// Abre o painel de cores
-function abrirPicker(campo) {
-    campoAtual = campo;
-    document.getElementById("colorPickerPanel").style.display = "block";
-}
-
-// Fecha o painel
-function fecharPicker() {
-    document.getElementById("colorPickerPanel").style.display = "none";
-}
-
-// Aplica a cor selecionada
-function aplicarCor() {
-    let novaCor = document.getElementById("colorPickerInput").value;
-
+function aplicarCorDireto(campo) {
     if (!qr) return;
 
-    switch (campoAtual) {
+    let novaCor;
+
+    switch (campo) {
         case "cor": // cor dos pontos
+            novaCor = document.getElementById("colorDotsInput").value;
             qr.update({ dotsOptions: { color: novaCor } });
             break;
         case "bg": // cor de fundo
+            novaCor = document.getElementById("colorBgInput").value;
             qr.update({ backgroundOptions: { color: novaCor } });
             break;
         case "border": // cor da borda
+            novaCor = document.getElementById("colorBorderInput").value;
             document.getElementById("qr-wrapper").style.borderColor = novaCor;
             break;
     }
@@ -220,6 +218,10 @@ function removerLogo() {
 
 
 /// =============================
+//  DOWNLOAD (VERSÃO FINAL)
+// =============================
+
+// =============================
 //  DOWNLOAD (VERSÃO FINAL)
 // =============================
 
@@ -258,9 +260,15 @@ async function baixar() {
 
             // --- CÁLCULO DO TEXTO E ESPAÇO FINAL ---
             const texto = document.getElementById("qr-text").value || "";
-            const bold = document.getElementById("bold-text").checked;
+            // CORREÇÃO: LÊ OS NOVOS CONTROLES DE ESTILO DE TEXTO
+            const fontWeight = document.getElementById("font-weight").value; // 'normal' ou 'bold'
+            const fontFamily = document.getElementById("font-family").value;
+            const fontSize = document.getElementById("font-size").value; // Em pixels
+            // FIM CORREÇÃO
+
             const textMarginTop = 1;
-            const textHeight = texto ? 36 : 0;
+            // CORREÇÃO: Usa o tamanho da fonte dinamicamente
+            const textHeight = texto ? (parseInt(fontSize) + 30) : 0; // CORREÇÃO: Aumentado o espaço para 30px
 
             // --- CÁLCULO DA ÁREA FINAL DO CANVAS ---
             const canvasWidth = qrWrapperWidth + 40; // 40px de margem externa total
@@ -318,10 +326,17 @@ async function baixar() {
 
             // 4. Desenhar o Texto (Centralizado Abaixo do QR)
             if (texto) {
-                const fontSize = 18;
-                const textY = wrapperY + innerHeight + (paddingVertical / 2) + borderWidth + textMarginTop + fontSize;
+                // CORREÇÃO: Define um padding (espaço) entre o QR e o texto
+                const textPaddingTop = 15;
 
-                ctx.font = (bold ? "700 " : "400 ") + fontSize + "px Arial";
+                // Calcula Y com o novo padding
+                // Posição inicial do texto (final do QR + padding vertical) + o padding novo + metade da altura da fonte.
+                const textY = wrapperY + innerHeight + (paddingVertical / 2) + borderWidth + textPaddingTop + (parseInt(fontSize) / 2);
+
+                // Converte 'bold' para '700' ou 'normal' para '400' para o canvas
+                const weight = (fontWeight === 'bold' ? "700 " : "400 ");
+                ctx.font = weight + fontSize + "px " + fontFamily.replace(/'/g, ''); // Remove as aspas simples
+
                 ctx.fillStyle = "#000";
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
@@ -342,35 +357,33 @@ async function baixar() {
 
     img.onerror = () => {
         URL.revokeObjectURL(url);
-        alert("Erro ao processar a imagem do QR para download.");
+        // Alterado para exibir o alerta customizado, se possível
+        if (typeof exibirAlerta === 'function') {
+            exibirAlerta("Erro ao processar a imagem do QR para download.");
+        } else {
+            alert("Erro ao processar a imagem do QR para download.");
+        }
     };
 }
-
 
 // =============================
 //  EVENTOS DE CONTROLES
 // =============================
 
 document.getElementById("qr-text").addEventListener("input", atualizarQRCode);
+
+// NOVOS EVENTOS PARA CONTROLES DE TEXTO
+document.getElementById("font-weight").addEventListener("change", atualizarQRCode);
+document.getElementById("font-family").addEventListener("change", atualizarQRCode);
+document.getElementById("font-size").addEventListener("input", atualizarQRCode);
+
+// EVENTOS DE BORDAS E QR
 document.getElementById("border-size").addEventListener("input", atualizarQRCode);
 document.getElementById("border-radius").addEventListener("input", atualizarQRCode);
 document.getElementById("shape").addEventListener("change", atualizarQRCode);
 document.getElementById("size").addEventListener("input", atualizarQRCode);
-document.getElementById("bold-text").addEventListener("change", atualizarQRCode);
 
-
-// Fecha o painel de cores ao clicar fora dele
-document.addEventListener("click", function (event) {
-    const panel = document.getElementById("colorPickerPanel");
-
-    // Se o painel estiver visível
-    if (panel.style.display === "block") {
-        // Se o clique não foi no painel e nem no botão que o abre, feche
-        if (!panel.contains(event.target) && !event.target.classList.contains("colorButton")) {
-            fecharPicker();
-        }
-    }
-});
+// O antigo: document.getElementById("bold-text").addEventListener("change", atualizarQRCode); FOI REMOVIDO
 
 
 // =============================

@@ -63,26 +63,34 @@
 
             <h2>Personalizar</h2>
 
-            <label>Cor principal:</label>
-            <button class="colorButton" onclick="abrirPicker('cor')">Alterar cor principal</button>
+            <label for="colorDotsInput">Cor principal (Pontos):</label>
+            <input type="color" id="colorDotsInput" value="#000000" oninput="aplicarCorDireto('cor')">
 
 
-            <label>Cor de fundo:</label>
-            <button class="colorButton" onclick="abrirPicker('bg')">Alterar cor de fundo</button>
+            <label for="colorBgInput">Cor de fundo (Interno):</label>
+            <input type="color" id="colorBgInput" value="#FFFFFF" oninput="aplicarCorDireto('bg')">
 
-            <label>Cor da borda:</label>
-            <button class="colorButton" onclick="abrirPicker('border')">Alterar Cor da borda</button>
-
-            <div id="colorPickerPanel">
-                <input type="color" id="colorPickerInput" oninput="aplicarCor()" />
-                <button onclick="fecharPicker()">Fechar</button>
-            </div>
+            <label for="colorBorderInput">Cor da borda (Wrapper):</label>
+            <input type="color" id="colorBorderInput" value="#000000" oninput="aplicarCorDireto('border')">
 
             <label>Texto abaixo do QR:</label>
             <input type="text" id="qr-text" placeholder="Ex: Escaneie aqui">
 
-            <label>Texto em Negrito:</label>
-            <input type="checkbox" id="bold-text">
+            <label>Estilo do Texto:</label>
+            <div id="text-controls" style="display: flex; gap: 10px; margin-top: 6px;">
+                <select id="font-family" style="width: 50%;">
+                    <option value="Arial, sans-serif">Arial</option>
+                    <option value="'Times New Roman', serif">Times New Roman</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                </select>
+                <select id="font-weight" style="width: 50%;">
+                    <option value="normal">Normal</option>
+                    <option value="bold">Negrito</option>
+                </select>
+            </div>
+
+            <label>Tamanho da Fonte:</label>
+            <input type="range" id="font-size" min="14" max="24" value="17">
 
             <label>Espessura da borda:</label>
             <input type="range" id="border-size" min="0" max="20" value="2">
