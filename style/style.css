@@ -1,29 +1,21 @@
 /* =============================== */
-/*   PALETA DE CORES QR.IO        */
+/* VARIÁVEIS DE CORES              */
 /* =============================== */
 
 :root {
-    /* Cor principal de Ação (botões) */
     --cor-primaria: #00BCD4;
-    /* Cor de hover para a ação */
     --cor-primaria-hover: #0097A7;
-    /* Cor principal escura (texto, headings) */
     --cor-escura: #2A354F;
-    /* Cor de fundo da página (cinza bem claro) */
     --cor-fundo: #F5F5F5;
-    /* Cor de Fundo de Alerta/Remover */
     --cor-alerta: #E91E63;
-    /* Cor de Fundo de Alerta/Remover (hover) */
     --cor-alerta-hover: #C2185B;
-
-    /* VARIÁVEIS AUSENTES ADICIONADAS PARA O ALERTA/MODAL */
     --cor-fundo-painel: #303030;
     --cor-borda-suave: #4F4F4F;
     --cor-texto-claro: #FFFFFF;
 }
 
 /* =============================== */
-/*   ESTILO GERAL DA PÁGINA       */
+/* ESTILO GERAL DA PÁGINA          */
 /* =============================== */
 
 * {
@@ -35,23 +27,23 @@
 
 body {
     background: var(--cor-fundo);
-    min-height: 100vh;
     width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    overflow-y: auto;
+    display: block;
     position: relative;
 }
 
 /* =============================== */
-/*   TELA INICIAL (GERAR QR)      */
+/* TELA INICIAL (GERAR QR)         */
 /* =============================== */
 
 .inicial {
+    /* Centraliza a primeira tela */
     display: flex;
     justify-content: center;
     align-items: center;
     width: 100%;
+    min-height: 100vh;
 }
 
 .container {
@@ -59,7 +51,7 @@ body {
     padding: 25px;
     border-radius: 12px;
     width: 480px;
-    height: 320px;
+    height: auto;
     font-size: 1.1rem;
     text-align: center;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -72,7 +64,8 @@ body {
 }
 
 .container select,
-.container input {
+.container input,
+.container textarea {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
@@ -94,33 +87,33 @@ body {
     transition: 0.25s ease;
 }
 
-#buttonBaixar {
-    position: absolute;
-    bottom: 40px;
-    transform: translateX(-50%);
-    width: 80%;
-    max-width: 350px;
-}
-
 .container button:hover {
     background: var(--cor-primaria-hover);
 }
 
 /* =============================== */
-/*   LAYOUT DO CUSTOMIZADOR       */
+/* LAYOUT DO CUSTOMIZADOR (DESKTOP)*/
 /* =============================== */
 
 .layout {
     display: flex;
+    flex-direction: row;
     gap: 25px;
     padding: 20px;
     width: 100%;
     max-width: 1100px;
+    margin: 20px auto;
+    /* ⭐️ AJUSTE CRUCIAL 2: Alinha pelo topo e estica as colunas para a altura máxima da tela */
+    align-items: stretch;
     animation: slideUp 0.5s ease forwards;
+
+    /* ⭐️ AJUSTE CRUCIAL 3: Limita a altura do container principal de colunas */
+    height: calc(100vh - 40px);
+    /* 100% da viewport - 20px de margem superior - 20px de margem inferior */
 }
 
 /* =============================== */
-/*   PREVIEW À ESQUERDA           */
+/* PREVIEW À ESQUERDA (ESTÁTICO)   */
 /* =============================== */
 
 .preview-area {
@@ -130,6 +123,19 @@ body {
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
     text-align: center;
+    min-width: 300px;
+
+    /* ⭐️ AJUSTE CRUCIAL: Transforma em Flex Column para alinhar itens */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    /* Mantém o conteúdo no topo */
+
+    /* Garante que a coluna tenha 100% da altura do container (.layout) */
+    height: 100%;
+
+    /* Remove a rolagem interna do preview (ele deve ser estático) */
+    overflow-y: hidden;
 }
 
 .preview-area h1 {
@@ -138,12 +144,17 @@ body {
 }
 
 .preview-box {
-    width: 320px;
-    height: 400px;
     margin: auto;
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    max-width: 350px;
+    padding: 10px 0;
+
+    /* ⭐️ NOVO AJUSTE: Permite que a área do QR code se expanda verticalmente 
+       para empurrar o botão de download para baixo. */
+    flex-grow: 1;
 }
 
 #qr-wrapper {
@@ -151,19 +162,32 @@ body {
     background: #ffffff;
     border: 3px solid #000;
     border-radius: 12px;
+    max-width: 100%;
+    display: inline-block;
+}
+
+#qr-container {
+    max-width: 100%;
+    height: auto;
+    margin: auto;
 }
 
 #qr-label {
     margin-top: 10px;
     font-size: 17px;
     text-align: center;
+    word-break: break-word;
+    padding: 0 5px;
 }
 
-/* Botão de baixar */
 .preview-area button {
     width: 100%;
     padding: 12px;
-    margin-top: 20px;
+
+    /* ⭐️ AJUSTE CRUCIAL: Empurra o botão para a parte inferior do .preview-area */
+    margin-top: auto;
+    margin-bottom: 0;
+
     background: var(--cor-primaria);
     border: none;
     color: #fff;
@@ -178,7 +202,7 @@ body {
 }
 
 /* =============================== */
-/*   ÁREA DE CONTROLES (EDITOR)   */
+/* ÁREA DE CONTROLES (EDITOR ROLÁVEL)*/
 /* =============================== */
 
 .editor {
@@ -187,9 +211,17 @@ body {
     padding: 25px;
     border-radius: 12px;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.12);
+    flex-shrink: 0;
+
+    /* ⭐️ AJUSTE CRUCIAL 5: Define a altura total e permite rolagem INTERNA */
+    height: 100%;
     overflow-y: auto;
-    max-height: 95vh;
+
+    /* Aumenta o padding inferior para garantir que o último item não fique colado na barra */
+    padding-bottom: 50px;
 }
+
+/* ... (Restante dos estilos internos mantidos) ... */
 
 .editor h2 {
     margin-bottom: 15px;
@@ -207,7 +239,8 @@ label {
 input[type="text"],
 select,
 input[type="range"],
-input[type="file"] {
+input[type="file"],
+textarea {
     width: 100%;
     padding: 8px;
     margin-top: 6px;
@@ -216,7 +249,16 @@ input[type="file"] {
     font-size: 15px;
 }
 
-/* Botões gerais (para o remover logo) */
+.editor input[type="color"] {
+    width: 100%;
+    padding: 2px;
+    margin-top: 6px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    height: 40px;
+    cursor: pointer;
+}
+
 .editor button {
     width: 100%;
     padding: 10px;
@@ -234,34 +276,15 @@ input[type="file"] {
     background: #1A2337;
 }
 
-/* Botões de escolha de cor */
-.editor input[type="color"] {
-    /* Herda o estilo básico dos inputs para largura, padding etc. */
-    width: 100%;
-    padding: 2px;
-    /* Reduz o padding para o seletor de cor */
-    margin-top: 6px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    height: 40px;
-    /* Altura fixa para visualização */
-    cursor: pointer;
-}
-
-/* =============================== */
-/*   ESTILO DOS SLIDERS (RANGE)   */
-/* =============================== */
-
+/* ESTILO DOS SLIDERS (RANGE) */
 input[type="range"] {
     -webkit-appearance: none;
     background: transparent;
     cursor: pointer;
     margin-top: 10px;
     height: 30px;
-    /* Aumenta a altura para facilitar o toque */
 }
 
-/* TRACK (O Caminho do Slider) */
 input[type="range"]::-webkit-slider-runnable-track {
     background: #ddd;
     border-radius: 5px;
@@ -274,28 +297,23 @@ input[type="range"]::-moz-range-track {
     height: 8px;
 }
 
-/* THUMB (O Botão de Arrastar) - Chrome/Safari */
 input[type="range"]::-webkit-slider-thumb {
     -webkit-appearance: none;
     border: none;
     height: 20px;
     width: 20px;
     border-radius: 50%;
-    /* COR PRIMÁRIA AQUI */
     background: var(--cor-primaria);
     margin-top: -6px;
-    /* Ajusta a posição */
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     transition: background 0.3s;
 }
 
-/* THUMB (O Botão de Arrastar) - Firefox */
 input[type="range"]::-moz-range-thumb {
     border: none;
     height: 20px;
     width: 20px;
     border-radius: 50%;
-    /* COR PRIMÁRIA AQUI */
     background: var(--cor-primaria);
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
     transition: background 0.3s;
@@ -306,10 +324,35 @@ input[type="range"]::-moz-range-thumb:hover {
     background: var(--cor-primaria-hover);
 }
 
-/* =============================== */
-/*   ANIMAÇÕES                     */
-/* =============================== */
+/* ESTILO PARA CAMPOS ADICIONAIS */
+#camposAdicionais {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
 
+#email-corpo {
+    resize: vertical;
+    min-height: 80px;
+    margin: 0;
+}
+
+#removerLogo {
+    margin-left: 10px;
+    padding: 8px 12px;
+    background: var(--cor-alerta);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+#removerLogo:hover {
+    background: var(--cor-alerta-hover);
+}
+
+/* ANIMAÇÕES E ALERTA */
 @keyframes fadeIn {
     from {
         opacity: 0;
@@ -334,10 +377,6 @@ input[type="range"]::-moz-range-thumb:hover {
     }
 }
 
-/* =============================== */
-/*   ALERTA CUSTOMIZADO (MODAL)   */
-/* =============================== */
-
 #customAlertModal {
     display: none;
     position: fixed;
@@ -353,7 +392,6 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 .alert-box {
-    /* USANDO VARIÁVEIS DEFINIDAS */
     background-color: var(--cor-fundo-painel);
     padding: 30px;
     border: 1px solid var(--cor-borda-suave);
@@ -362,7 +400,6 @@ input[type="range"]::-moz-range-thumb:hover {
     max-width: 400px;
     text-align: center;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
-    /* USANDO VARIÁVEL DEFINIDA */
     color: var(--cor-texto-claro);
 }
 
@@ -394,128 +431,102 @@ input[type="range"]::-moz-range-thumb:hover {
     transform: translateY(-1px);
 }
 
-/* Animações de entrada e saída */
-.slide-in {
-    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
-}
-
-.slide-out {
-    animation: slideOut 0.4s ease-in forwards;
-}
-
-@keyframes slideIn {
-    0% {
-        opacity: 0;
-        transform: translateY(-100px);
-    }
-
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-@keyframes slideOut {
-    0% {
-        opacity: 1;
-        transform: translateY(0);
-    }
-
-    100% {
-        opacity: 0;
-        transform: translateY(30px);
-    }
-}
 
 /* =============================== */
-/*   ESTILO PARA CAMPOS ADICIONAIS */
+/* RESPONSIVIDADE (MOBILE)         */
 /* =============================== */
 
-/* Container que envolve os campos adicionais */
-#camposAdicionais {
-    margin-top: 5px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
+@media (max-width: 700px) {
 
-/* Campos de texto dinâmicos (WhatsApp e Assunto do Email) */
-#camposAdicionais input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    transition: border-color 0.3s ease;
-}
-
-#camposAdicionais input[type="text"]:focus,
-#camposAdicionais textarea:focus {
-    border-color: var(--cor-primaria);
-    outline: none;
-}
-
-/* Estilo para o CORPO do Email (o textarea) */
-#email-corpo {
-    width: 100%;
-    padding: 10px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    font-size: 15px;
-    resize: vertical;
-    min-height: 80px;
-    margin: 0;
-}
-
-/* Garante que o input principal não tenha a margem-top se for o primeiro elemento */
-.container input {
-    margin-top: 10px;
-}
-
-/* =============================== */
-/*   RESPONSIVIDADE               */
-/* =============================== */
-
-@media (max-width: 900px) {
+    /* LAYOUT (MOBILE): Volta a ser coluna e remove a altura fixa do desktop */
     .layout {
         flex-direction: column;
         align-items: center;
+        padding: 0;
+        margin: 0;
+        /* Remove regras de altura fixa */
+        height: auto;
+        max-height: none;
     }
 
-    .preview-box {
-        width: 250px;
-        height: 320px;
-    }
-
-    .editor {
+    /* ⭐️ ÁREA DE PREVIEW (MOBILE): Fixo (Sticky) no topo */
+    .preview-area {
         width: 100%;
-        max-width: 420px;
+        min-width: unset;
+        padding: 15px 0;
+        background: #ffffff;
+
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 0;
+
+        /* Ajuste para mobile */
+        height: auto;
+        overflow-y: visible;
+        /* Garante que não haja scroll interno se o conteúdo for maior */
     }
-}
 
-@media (max-width: 450px) {
-
-    .editor,
-    .container {
+    /* EDITOR (MOBILE): Rola por baixo */
+    .editor {
         width: 90%;
+        max-width: 450px;
+        margin-top: 15px;
+        margin-left: auto;
+        margin-right: auto;
+        padding: 25px;
+
+        /* Ajuste para mobile */
+        height: auto;
+        overflow-y: visible;
+        padding-bottom: 25px;
+    }
+
+    /* Centraliza e limita o QR Code no mobile */
+    .preview-area h1,
+    .preview-area .preview-box,
+    .preview-area button {
+        max-width: 90%;
+        margin-left: auto;
+        margin-right: auto;
     }
 
     .preview-box {
-        width: 210px;
-        height: 280px;
+        max-width: 250px;
     }
-}
 
-#removerLogo {
-    margin-left: 10px;
-    padding: 8px 12px;
-    background: var(--cor-alerta);
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-}
+    /* Ajustes para telas muito pequenas */
+    @media (max-width: 350px) {
 
-#removerLogo:hover {
-    background: var(--cor-alerta-hover);
+        .editor,
+        .container {
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .preview-area {
+            padding: 10px 0;
+        }
+
+        .preview-area h1 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .preview-area .preview-box {
+            max-width: 300px;
+        }
+
+        #qr-label {
+            font-size: 14px;
+        }
+
+        #qr-container {
+            max-width: 100%;
+            height: auto;
+            margin: auto;
+        }
+    }
 }
