@@ -1,5 +1,29 @@
 /* =============================== */
-/*   ESTILO GERAL DA PÁGINA       */
+/*   PALETA DE CORES QR.IO        */
+/* =============================== */
+
+:root {
+    /* Cor principal de Ação (botões) */
+    --cor-primaria: #00BCD4;
+    /* Cor de hover para a ação */
+    --cor-primaria-hover: #0097A7;
+    /* Cor principal escura (texto, headings) */
+    --cor-escura: #2A354F;
+    /* Cor de fundo da página (cinza bem claro) */
+    --cor-fundo: #F5F5F5;
+    /* Cor de Fundo de Alerta/Remover */
+    --cor-alerta: #E91E63;
+    /* Cor de Fundo de Alerta/Remover (hover) */
+    --cor-alerta-hover: #C2185B;
+
+    /* VARIÁVEIS AUSENTES ADICIONADAS PARA O ALERTA/MODAL */
+    --cor-fundo-painel: #303030;
+    --cor-borda-suave: #4F4F4F;
+    --cor-texto-claro: #FFFFFF;
+}
+
+/* =============================== */
+/*   ESTILO GERAL DA PÁGINA       */
 /* =============================== */
 
 * {
@@ -10,7 +34,7 @@
 }
 
 body {
-    background: #f2f2f2;
+    background: var(--cor-fundo);
     min-height: 100vh;
     width: 100%;
     display: flex;
@@ -20,7 +44,7 @@ body {
 }
 
 /* =============================== */
-/*   TELA INICIAL (GERAR QR)      */
+/*   TELA INICIAL (GERAR QR)      */
 /* =============================== */
 
 .inicial {
@@ -31,12 +55,11 @@ body {
 }
 
 .container {
-    background: #ffffff;
+    background: #FFFFFF;
     padding: 25px;
     border-radius: 12px;
     width: 480px;
     height: 320px;
-    padding: 25px;
     font-size: 1.1rem;
     text-align: center;
     box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
@@ -45,7 +68,7 @@ body {
 
 .container h1 {
     margin-bottom: 20px;
-    color: #222;
+    color: var(--cor-escura);
 }
 
 .container select,
@@ -62,7 +85,7 @@ body {
     width: 100%;
     padding: 12px;
     margin-top: 15px;
-    background: #0077ff;
+    background: var(--cor-primaria);
     color: #fff;
     border: none;
     border-radius: 6px;
@@ -80,11 +103,11 @@ body {
 }
 
 .container button:hover {
-    background: #005fd4;
+    background: var(--cor-primaria-hover);
 }
 
 /* =============================== */
-/*   LAYOUT DO CUSTOMIZADOR       */
+/*   LAYOUT DO CUSTOMIZADOR       */
 /* =============================== */
 
 .layout {
@@ -97,7 +120,7 @@ body {
 }
 
 /* =============================== */
-/*   PREVIEW À ESQUERDA           */
+/*   PREVIEW À ESQUERDA           */
 /* =============================== */
 
 .preview-area {
@@ -111,6 +134,7 @@ body {
 
 .preview-area h1 {
     margin-bottom: 30px;
+    color: var(--cor-escura);
 }
 
 .preview-box {
@@ -135,12 +159,12 @@ body {
     text-align: center;
 }
 
-/* botão de baixar */
+/* Botão de baixar */
 .preview-area button {
     width: 100%;
     padding: 12px;
     margin-top: 20px;
-    background: #0077ff;
+    background: var(--cor-primaria);
     border: none;
     color: #fff;
     border-radius: 6px;
@@ -150,11 +174,11 @@ body {
 }
 
 .preview-area button:hover {
-    background: #005fd4;
+    background: var(--cor-primaria-hover);
 }
 
 /* =============================== */
-/*   ÁREA DE CONTROLES (EDITOR)   */
+/*   ÁREA DE CONTROLES (EDITOR)   */
 /* =============================== */
 
 .editor {
@@ -170,13 +194,14 @@ body {
 .editor h2 {
     margin-bottom: 15px;
     margin-top: 5px;
+    color: var(--cor-escura);
 }
 
 label {
     display: block;
     margin-top: 14px;
     font-weight: bold;
-    color: #222;
+    color: var(--cor-escura);
 }
 
 input[type="text"],
@@ -191,12 +216,12 @@ input[type="file"] {
     font-size: 15px;
 }
 
-/* Botões de escolher cor */
+/* Botões gerais (para o remover logo) */
 .editor button {
     width: 100%;
     padding: 10px;
     margin-top: 6px;
-    background: #444;
+    background: var(--cor-escura);
     color: white;
     border: none;
     border-radius: 6px;
@@ -206,16 +231,16 @@ input[type="file"] {
 }
 
 .editor button:hover {
-    background: #222;
+    background: #1A2337;
 }
 
-/* botões */
+/* Botões de escolha de cor */
 .colorButton {
     width: 100%;
     padding: 10px;
     margin-top: 10px;
     font-size: 15px;
-    background: #0077ff;
+    background: var(--cor-primaria);
     color: #fff;
     border: none;
     border-radius: 8px;
@@ -223,10 +248,10 @@ input[type="file"] {
 }
 
 .colorButton:hover {
-    background: #005fd4;
+    background: var(--cor-primaria-hover);
 }
 
-/* painel no lado direito da tela */
+/* Painel no lado direito da tela */
 #colorPickerPanel {
     position: fixed;
     top: 50%;
@@ -237,7 +262,6 @@ input[type="file"] {
     border-radius: 10px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
     display: none;
-    /* começa fechado */
     z-index: 999;
 }
 
@@ -250,7 +274,7 @@ input[type="file"] {
 
 
 /* =============================== */
-/*   ANIMAÇÕES                     */
+/*   ANIMAÇÕES                     */
 /* =============================== */
 
 @keyframes fadeIn {
@@ -278,7 +302,145 @@ input[type="file"] {
 }
 
 /* =============================== */
-/*   RESPONSIVIDADE               */
+/*   ALERTA CUSTOMIZADO (MODAL)   */
+/* =============================== */
+
+#customAlertModal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-box {
+    /* USANDO VARIÁVEIS DEFINIDAS */
+    background-color: var(--cor-fundo-painel);
+    padding: 30px;
+    border: 1px solid var(--cor-borda-suave);
+    border-radius: 12px;
+    width: 90%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    /* USANDO VARIÁVEL DEFINIDA */
+    color: var(--cor-texto-claro);
+}
+
+.alert-box h3 {
+    color: var(--cor-primaria);
+    margin-bottom: 15px;
+    font-size: 1.5rem;
+}
+
+#alertMessage {
+    margin-bottom: 25px;
+    font-size: 1.1rem;
+}
+
+.alert-box button {
+    width: 100%;
+    padding: 10px;
+    background: var(--cor-primaria);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.alert-box button:hover {
+    background: var(--cor-primaria-hover);
+    transform: translateY(-1px);
+}
+
+/* Animações de entrada e saída */
+.slide-in {
+    animation: slideIn 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+}
+
+.slide-out {
+    animation: slideOut 0.4s ease-in forwards;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-100px);
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideOut {
+    0% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+}
+
+/* =============================== */
+/*   ESTILO PARA CAMPOS ADICIONAIS */
+/* =============================== */
+
+/* Container que envolve os campos adicionais */
+#camposAdicionais {
+    margin-top: 5px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+/* Campos de texto dinâmicos (WhatsApp e Assunto do Email) */
+#camposAdicionais input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    transition: border-color 0.3s ease;
+}
+
+#camposAdicionais input[type="text"]:focus,
+#camposAdicionais textarea:focus {
+    border-color: var(--cor-primaria);
+    outline: none;
+}
+
+/* Estilo para o CORPO do Email (o textarea) */
+#email-corpo {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+    resize: vertical;
+    min-height: 80px;
+    margin: 0;
+}
+
+/* Garante que o input principal não tenha a margem-top se for o primeiro elemento */
+.container input {
+    margin-top: 10px;
+}
+
+/* =============================== */
+/*   RESPONSIVIDADE               */
 /* =============================== */
 
 @media (max-width: 900px) {
@@ -314,7 +476,7 @@ input[type="file"] {
 #removerLogo {
     margin-left: 10px;
     padding: 8px 12px;
-    background: #c0392b;
+    background: var(--cor-alerta);
     color: white;
     border: none;
     border-radius: 6px;
@@ -322,5 +484,5 @@ input[type="file"] {
 }
 
 #removerLogo:hover {
-    background: #e74c3c;
+    background: var(--cor-alerta-hover);
 }

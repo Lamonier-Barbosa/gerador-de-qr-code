@@ -6,18 +6,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gerador de QR Code</title>
 
-    <!-- CSS Geral -->
     <link rel="stylesheet" href="style/style.css">
 
-    <!-- Lib do QR Code Styling -->
     <script src="https://cdn.jsdelivr.net/npm/qr-code-styling@1.6.0/lib/qr-code-styling.js"></script>
 </head>
 
 <body>
 
-    <!-- ========================== -->
-    <!--  TELA INICIAL DO GERADOR  -->
-    <!-- ========================== -->
     <div class="inicial">
 
         <div class="container">
@@ -35,19 +30,21 @@
 
             <input id="texto" type="text" placeholder="Digite algo para gerar QR">
 
+            <div id="camposAdicionais" style="display: none;">
+                <input id="whatsapp-msg" type="text" placeholder="Digite a mensagem (opcional)">
+                <input id="email-assunto" type="text" placeholder="Assunto do E-mail (opcional)">
+                <textarea id="email-corpo" placeholder="Corpo do E-mail (opcional)"></textarea>
+            </div>
+
             <button onclick="gerarQRCode()">Gerar QR Code</button>
+
         </div>
 
     </div>
 
 
-
-    <!-- ========================== -->
-    <!--  ÁREA DE CUSTOMIZAÇÃO     -->
-    <!-- ========================== -->
     <div class="layout" style="display:none;">
 
-        <!-- PREVIEW À ESQUERDA -->
         <div class="preview-area">
             <h1>Seu QR Code</h1>
 
@@ -62,7 +59,6 @@
         </div>
 
 
-        <!-- CONTROLES À DIREITA -->
         <div class="editor">
 
             <h2>Personalizar</h2>
@@ -114,8 +110,14 @@
 
     </div>
 
+    <div id="customAlertModal">
+        <div class="alert-box">
+            <h3>⚠️ Atenção</h3>
+            <p id="alertMessage"></p>
+            <button onclick="fecharAlerta()">Entendi</button>
+        </div>
+    </div>
 
-    <!-- JS da página -->
     <script src="js/script.js"></script>
 
 </body>
