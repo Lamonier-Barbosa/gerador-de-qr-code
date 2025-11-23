@@ -215,6 +215,10 @@ function aplicarCorDireto(campo) {
             novaCor = document.getElementById("colorBorderInput").value;
             document.getElementById("qr-wrapper").style.borderColor = novaCor;
             break;
+        case "text":
+            novaCor = document.getElementById("colorText").value;
+            document.getElementById("qr-label").style.color = novaCor;
+            break;
     }
 }
 
@@ -293,6 +297,7 @@ async function baixar() {
             // Calcula o tamanho da fonte dinamicamente (PROPORCIONAL AO QR)
             const size = document.getElementById("size").value;
             const fontSize = Math.max(12, Math.round(parseInt(size) * 0.12)); // Valor em pixels
+            const textColor = document.getElementById("colorText").value;
 
             const textMarginTop = 1;
             // Altura que o texto vai ocupar no Canvas (altura da fonte + margens)
@@ -367,7 +372,7 @@ async function baixar() {
                 const weight = (fontWeight === 'bold' ? "700 " : "400 ");
                 ctx.font = weight + fontSize + "px " + fontFamily.replace(/'/g, '');
 
-                ctx.fillStyle = "#000";
+                ctx.fillStyle = textColor;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
