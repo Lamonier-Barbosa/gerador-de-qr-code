@@ -33,10 +33,9 @@ function gerarQRCode() {
             break;
 
         case "link":
-            // ... (Restante do código mantido) ...
+            // ⭐️ MODIFICAÇÃO: Não exige mais 'https'. Se faltar 'http', ele adiciona.
             if (!input.startsWith("http")) {
-                exibirAlerta("Forneça uma URL válida, como https://... .");
-                return;
+                input = "http://" + input;
             }
             conteudo = input;
             break;
@@ -44,13 +43,23 @@ function gerarQRCode() {
         // ... (Mantenha os outros cases: whatsapp, email, telefone, spotify, foto) ...
 
         case "whatsapp":
-            const numero = input.replace(/\D/g, "");
+            const numeroLimpo = input.replace(/\D/g, "");
+
+            // ⭐️ NOVA VALIDAÇÃO: 11 dígitos (DDD + 9 dígitos)
+            const regexCelular = /^\d{11}$/;
+
+            if (!regexCelular.test(numeroLimpo)) {
+                exibirAlerta("O número de WhatsApp deve conter o DDD mais o número totalizando 11 dígitos.");
+                return;
+            }
+
             // Pega a mensagem do campo adicional
             const msg = document.getElementById("whatsapp-msg").value.trim();
-            // CORREÇÃO DE LIMITE: A mensagem do WhatsApp TAMBÉM deve ser limitada,
-            // mas o número não. O número é tratado como parte da URL final.
+            // CORREÇÃO DE LIMITE (mantida)
             const msgLimitada = msg.substring(0, MAX_CARACTERES_COMUM);
-            conteudo = `https://wa.me/55${numero}?text=${encodeURIComponent(msgLimitada)}`;
+
+            // Usa o número limpo (11 dígitos)
+            conteudo = `https://wa.me/55${numeroLimpo}?text=${encodeURIComponent(msgLimitada)}`;
             break;
 
         case "email":
@@ -73,9 +82,10 @@ function gerarQRCode() {
             break;
 
         case "foto":
+            // ⭐️ MODIFICAÇÃO: Não exige mais 'https'. Se faltar 'http', ele adiciona.
             if (!input.startsWith("http")) {
-                exibirAlerta("Para usar foto, forneça uma URL válida, como https://... .");
-                return;
+                // Se não começar com http ou https, adiciona http://
+                input = "http://" + input;
             }
             conteudo = input;
             break;
