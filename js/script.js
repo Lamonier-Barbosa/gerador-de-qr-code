@@ -2,11 +2,15 @@
 //  GERADOR INICIAL (primeira etapa)
 // =============================
 
+const MAX_CARACTERES_COMUM = 250;
+const MAX_CARACTERES_ROTULO = 16;
+const MAX_QR_DATA_SIZE = 230;
+
 let qr; // objeto global do QR Code Styling
 
 function gerarQRCode() {
     const tipo = document.getElementById("tipo").value;
-    const input = document.getElementById("texto").value.trim();
+    let input = document.getElementById("texto").value.trim(); // Use let para poder modificar
 
     if (!input) {
         exibirAlerta("Digite algo para gerar o QR Code.");
@@ -15,30 +19,53 @@ function gerarQRCode() {
 
     let conteudo = "";
 
+    // --- NOVO BLOCO DE VERIFICAÇÃO DE LIMITE DE CARACTERES ---
+    if (input.length > MAX_CARACTERES_COMUM) {
+        // Trunca o texto e exibe um alerta
+        input = input.substring(0, MAX_CARACTERES_COMUM);
+        exibirAlerta(`O texto foi truncado para ${MAX_CARACTERES_COMUM} caracteres para garantir a escaneabilidade do QR Code.`);
+    }
+    // --------------------------------------------------------
+
     switch (tipo) {
         case "texto":
             conteudo = input;
             break;
 
         case "link":
+            // ⭐️ MODIFICAÇÃO: Não exige mais 'https'. Se faltar 'http', ele adiciona.
             if (!input.startsWith("http")) {
-                exibirAlerta("Forneça uma URL válida, como https://... .");
-                return;
+                input = "http://" + input;
             }
             conteudo = input;
             break;
 
+        // ... (Mantenha os outros cases: whatsapp, email, telefone, spotify, foto) ...
+
         case "whatsapp":
-            const numero = input.replace(/\D/g, "");
+            const numeroLimpo = input.replace(/\D/g, "");
+
+            // ⭐️ NOVA VALIDAÇÃO: 11 dígitos (DDD + 9 dígitos)
+            const regexCelular = /^\d{11}$/;
+
+            if (!regexCelular.test(numeroLimpo)) {
+                exibirAlerta("O número de WhatsApp deve conter o DDD mais o número totalizando 11 dígitos.");
+                return;
+            }
+
             // Pega a mensagem do campo adicional
             const msg = document.getElementById("whatsapp-msg").value.trim();
-            conteudo = `https://wa.me/55${numero}?text=${encodeURIComponent(msg)}`;
+            // CORREÇÃO DE LIMITE (mantida)
+            const msgLimitada = msg.substring(0, MAX_CARACTERES_COMUM);
+
+            // Usa o número limpo (11 dígitos)
+            conteudo = `https://wa.me/55${numeroLimpo}?text=${encodeURIComponent(msgLimitada)}`;
             break;
 
         case "email":
             // Pega os valores dos campos adicionais
-            const assunto = document.getElementById("email-assunto").value.trim();
-            const corpo = document.getElementById("email-corpo").value.trim();
+            const assunto = document.getElementById("email-assunto").value.trim().substring(0, MAX_CARACTERES_COMUM);
+            const corpo = document.getElementById("email-corpo").value.trim().substring(0, MAX_CARACTERES_COMUM);
             conteudo =
                 `mailto:${input}?subject=${encodeURIComponent(assunto)}&body=${encodeURIComponent(corpo)}`;
             break;
@@ -55,9 +82,10 @@ function gerarQRCode() {
             break;
 
         case "foto":
+            // ⭐️ MODIFICAÇÃO: Não exige mais 'https'. Se faltar 'http', ele adiciona.
             if (!input.startsWith("http")) {
-                exibirAlerta("Para usar foto, forneça uma URL válida, como https://... .");
-                return;
+                // Se não começar com http ou https, adiciona http://
+                input = "http://" + input;
             }
             conteudo = input;
             break;
@@ -65,7 +93,6 @@ function gerarQRCode() {
 
     iniciarCustomizacao(conteudo);
 }
-
 
 // =============================
 //  INICIAR CUSTOMIZAÇÃO (mostra a segunda parte)
@@ -129,6 +156,10 @@ function fecharAlerta() {
 //  ATUALIZAÇÃO DO QR CODE EM TEMPO REAL
 // =============================
 
+// =============================
+//  ATUALIZAÇÃO DO QR CODE EM TEMPO REAL
+// =============================
+
 function atualizarQRCode() {
     if (!qr) return;
 
@@ -139,11 +170,15 @@ function atualizarQRCode() {
     const borderSize = document.getElementById("border-size").value;
     const radius = document.getElementById("border-radius").value;
 
-    // NOVOS VALORES DE TEXTO:
     const labelText = document.getElementById("qr-text").value;
-    const fontWeight = document.getElementById("font-weight").value; // 'normal' ou 'bold'
+    const fontWeight = document.getElementById("font-weight").value;
     const fontFamily = document.getElementById("font-family").value;
-    const fontSize = document.getElementById("font-size").value;
+
+    // ⭐️ NOVO: CALCULA O TAMANHO DA FONTE DINAMICAMENTE
+    // Define a fonte como aproximadamente 12% da largura do QR.
+    // O valor '0.12' pode ser ajustado para otimizar o encaixe.
+    const fontSize = Math.max(12, Math.round(parseInt(size) * 0.12));
+    // Usamos Math.max(12, ...) para garantir um tamanho mínimo legível.
     // FIM NOVOS VALORES DE TEXTO
 
     // Atualiza texto
@@ -153,7 +188,7 @@ function atualizarQRCode() {
     // APLICA OS NOVOS ESTILOS DE TEXTO
     label.style.fontWeight = fontWeight;
     label.style.fontFamily = fontFamily;
-    label.style.fontSize = fontSize + "px"; // Adiciona 'px'
+    label.style.fontSize = fontSize + "px"; // Usa o valor calculado
 
     // Borda do wrapper
     wrapper.style.borderWidth = borderSize + "px";
@@ -190,8 +225,17 @@ function aplicarCorDireto(campo) {
             novaCor = document.getElementById("colorBorderInput").value;
             document.getElementById("qr-wrapper").style.borderColor = novaCor;
             break;
+        case "text":
+            novaCor = document.getElementById("colorText").value;
+            document.getElementById("qr-label").style.color = novaCor;
+            break;
     }
 }
+
+// =============================
+//  VALIDAÇÃO DE COMPATIBILIDADE DE TAMANHOS
+// =============================
+
 
 
 // =============================
@@ -215,11 +259,6 @@ function removerLogo() {
     qr.update({ image: "" }); // remove a imagem
     document.getElementById("logo").value = ""; // limpa o input
 }
-
-
-/// =============================
-//  DOWNLOAD (VERSÃO FINAL)
-// =============================
 
 // =============================
 //  DOWNLOAD (VERSÃO FINAL)
@@ -260,24 +299,29 @@ async function baixar() {
 
             // --- CÁLCULO DO TEXTO E ESPAÇO FINAL ---
             const texto = document.getElementById("qr-text").value || "";
+
             // CORREÇÃO: LÊ OS NOVOS CONTROLES DE ESTILO DE TEXTO
-            const fontWeight = document.getElementById("font-weight").value; // 'normal' ou 'bold'
+            const fontWeight = document.getElementById("font-weight").value;
             const fontFamily = document.getElementById("font-family").value;
-            const fontSize = document.getElementById("font-size").value; // Em pixels
-            // FIM CORREÇÃO
+
+            // Calcula o tamanho da fonte dinamicamente (PROPORCIONAL AO QR)
+            const size = document.getElementById("size").value;
+            const fontSize = Math.max(12, Math.round(parseInt(size) * 0.12)); // Valor em pixels
+            const textColor = document.getElementById("colorText").value;
 
             const textMarginTop = 1;
-            // CORREÇÃO: Usa o tamanho da fonte dinamicamente
-            const textHeight = texto ? (parseInt(fontSize) + 30) : 0; // CORREÇÃO: Aumentado o espaço para 30px
+            // Altura que o texto vai ocupar no Canvas (altura da fonte + margens)
+            const textHeight = texto ? (fontSize + 20) : 0; // Margem de 20px (10px acima e 10px abaixo da fonte)
 
             // --- CÁLCULO DA ÁREA FINAL DO CANVAS ---
-            const canvasWidth = qrWrapperWidth + 40; // 40px de margem externa total
+            const canvasWidth = qrWrapperWidth + 40; // 20px de margem externa em cada lado
 
             let canvasHeight = qrWrapperHeight;
             if (texto) {
+                // Adiciona a altura do texto com a margem
                 canvasHeight += textMarginTop + textHeight;
             }
-            canvasHeight += 40; // 40px de margem superior e inferior
+            canvasHeight += 40; // 20px de margem superior e inferior
 
             const canvas = document.createElement("canvas");
             canvas.width = Math.ceil(canvasWidth);
@@ -291,10 +335,11 @@ async function baixar() {
             // 2. Desenhar o Retângulo de Borda Arredondada
             const wrapperX = 20;
             const wrapperY = 20;
+            // Altura do wrapper é a altura total do canvas - margens externas (40px)
             const finalOuterWidth = qrWrapperWidth;
             const finalOuterHeight = canvasHeight - 40;
 
-            // Função para desenhar retângulo arredondado
+            // Função para desenhar retângulo arredondado (mantida)
             function roundRect(ctx, x, y, w, h, r) {
                 const min = Math.min(w, h) / 2;
                 if (r > min) r = min;
@@ -320,7 +365,7 @@ async function baixar() {
             }
 
             // 3. Desenhar a Imagem do QR Code
-            const qrX = wrapperX + (finalOuterWidth - innerWidth) / 2;
+            const qrX = wrapperX + borderWidth + (paddingHorizontal / 2); // Posição X ajustada
             const qrY = wrapperY + borderWidth + (paddingVertical / 2);
             ctx.drawImage(img, qrX, qrY, innerWidth, innerHeight);
 
@@ -330,14 +375,14 @@ async function baixar() {
                 const textPaddingTop = 15;
 
                 // Calcula Y com o novo padding
-                // Posição inicial do texto (final do QR + padding vertical) + o padding novo + metade da altura da fonte.
-                const textY = wrapperY + innerHeight + (paddingVertical / 2) + borderWidth + textPaddingTop + (parseInt(fontSize) / 2);
+                // Posição central vertical do texto
+                const textY = qrY + innerHeight + textPaddingTop + (fontSize / 2);
 
                 // Converte 'bold' para '700' ou 'normal' para '400' para o canvas
                 const weight = (fontWeight === 'bold' ? "700 " : "400 ");
-                ctx.font = weight + fontSize + "px " + fontFamily.replace(/'/g, ''); // Remove as aspas simples
+                ctx.font = weight + fontSize + "px " + fontFamily.replace(/'/g, '');
 
-                ctx.fillStyle = "#000";
+                ctx.fillStyle = textColor;
                 ctx.textAlign = "center";
                 ctx.textBaseline = "middle";
 
@@ -365,17 +410,28 @@ async function baixar() {
         }
     };
 }
-
 // =============================
 //  EVENTOS DE CONTROLES
 // =============================
 
-document.getElementById("qr-text").addEventListener("input", atualizarQRCode);
+document.getElementById("qr-text").addEventListener("input", function () {
+    let input = this.value;
+
+    if (input.length > MAX_CARACTERES_ROTULO) {
+        // 1. Trunca o texto
+        this.value = input.substring(0, MAX_CARACTERES_ROTULO);
+
+        // 2. Notifica o usuário
+        exibirAlerta(`O texto do rótulo foi limitado a ${MAX_CARACTERES_ROTULO} caracteres para caber na área de visualização.`);
+    }
+
+    // 3. ATUALIZA o visual após o ajuste ou digitação normal
+    atualizarQRCode();
+});
 
 // NOVOS EVENTOS PARA CONTROLES DE TEXTO
 document.getElementById("font-weight").addEventListener("change", atualizarQRCode);
 document.getElementById("font-family").addEventListener("change", atualizarQRCode);
-document.getElementById("font-size").addEventListener("input", atualizarQRCode);
 
 // EVENTOS DE BORDAS E QR
 document.getElementById("border-size").addEventListener("input", atualizarQRCode);

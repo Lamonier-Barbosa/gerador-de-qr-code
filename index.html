@@ -63,15 +63,8 @@
 
             <h2>Personalizar</h2>
 
-            <label for="colorDotsInput">Cor principal (Pontos):</label>
-            <input type="color" id="colorDotsInput" value="#000000" oninput="aplicarCorDireto('cor')">
-
-
-            <label for="colorBgInput">Cor de fundo (Interno):</label>
-            <input type="color" id="colorBgInput" value="#FFFFFF" oninput="aplicarCorDireto('bg')">
-
-            <label for="colorBorderInput">Cor da borda (Wrapper):</label>
-            <input type="color" id="colorBorderInput" value="#000000" oninput="aplicarCorDireto('border')">
+            <label>Tamanho do QR:</label>
+            <input type="range" id="size" min="100" max="230" value="150">
 
             <label>Texto abaixo do QR:</label>
             <input type="text" id="qr-text" placeholder="Ex: Escaneie aqui">
@@ -89,9 +82,6 @@
                 </select>
             </div>
 
-            <label>Tamanho da Fonte:</label>
-            <input type="range" id="font-size" min="14" max="24" value="17">
-
             <label>Espessura da borda:</label>
             <input type="range" id="border-size" min="0" max="20" value="2">
 
@@ -105,15 +95,23 @@
                 <option value="rounded">Arredondado</option>
             </select>
 
-            <label>Tamanho do QR:</label>
-            <input type="range" id="size" min="100" max="230" value="150">
+            <label for="colorDotsInput">Cor principal:</label>
+            <input type="color" id="colorDotsInput" value="#000000" oninput="aplicarCorDireto('cor')">
+
+            <label for="colorBgInput">Cor de fundo:</label>
+            <input type="color" id="colorBgInput" value="#FFFFFF" oninput="aplicarCorDireto('bg')">
+
+            <label for="colorBorderInput">Cor da borda:</label>
+            <input type="color" id="colorBorderInput" value="#000000" oninput="aplicarCorDireto('border')">
+
+            <label>Cor do Texto:</label>
+            <input type="color" id="colorText" value="#000000" oninput="aplicarCorDireto('text')">
 
             <div class="logo-controls">
                 <label>Adicionar Logo:</label>
                 <input type="file" id="logo" accept="image/*">
                 <button id="removerLogo" onclick="removerLogo()">Remover Logo</button>
             </div>
-
         </div>
 
     </div>
