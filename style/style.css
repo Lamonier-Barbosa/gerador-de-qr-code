@@ -339,7 +339,6 @@ input[type="range"]::-moz-range-thumb:hover {
 }
 
 #removerLogo {
-    margin-left: 10px;
     padding: 8px 12px;
     background: var(--cor-alerta);
     color: white;

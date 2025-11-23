@@ -43,15 +43,16 @@ function gerarQRCode() {
         // ... (Mantenha os outros cases: whatsapp, email, telefone, spotify, foto) ...
 
         case "whatsapp":
-            const numeroLimpo = input.replace(/\D/g, "");
 
-            // ⭐️ NOVA VALIDAÇÃO: 11 dígitos (DDD + 9 dígitos)
             const regexCelular = /^\d{11}$/;
 
-            if (!regexCelular.test(numeroLimpo)) {
-                exibirAlerta("O número de WhatsApp deve conter o DDD mais o número totalizando 11 dígitos.");
+            if (!regexCelular.test(input)) {
+                exibirAlerta("O número de WhatsApp deve conter somente números com 11 dígitos (DDD + número).");
                 return;
             }
+
+            // Se passar na validação, usa o input (que é o número limpo de 11 dígitos)
+            const numeroLimpo = input; // Agora 'input' é garantidamente o número limpo.
 
             // Pega a mensagem do campo adicional
             const msg = document.getElementById("whatsapp-msg").value.trim();
@@ -92,6 +93,29 @@ function gerarQRCode() {
     }
 
     iniciarCustomizacao(conteudo);
+}
+
+// =============================
+//  VOLTAR PARA INICIAL (Nova função)
+// =============================
+
+/**
+ * Esconde a área de customização e mostra a área inicial.
+ */
+function voltarParaInicial() {
+    // 1. Esconde a área de customização
+    document.querySelector(".layout").style.display = "none";
+    // 2. Mostra a área inicial
+    document.querySelector(".inicial").style.display = "flex"; // Use 'block' ou 'flex' dependendo do seu CSS original
+
+    // Opcional: Limpar campos da página inicial ao voltar
+    document.getElementById("texto").value = "";
+    document.getElementById("whatsapp-msg").value = "";
+    document.getElementById("email-assunto").value = "";
+    document.getElementById("email-corpo").value = "";
+
+    // Opcional: Se desejar, force a re-exibição correta dos campos adicionais
+    atualizarPlaceholder();
 }
 
 // =============================
