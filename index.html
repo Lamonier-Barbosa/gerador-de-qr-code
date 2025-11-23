@@ -73,6 +73,9 @@
             <label for="colorBorderInput">Cor da borda (Wrapper):</label>
             <input type="color" id="colorBorderInput" value="#000000" oninput="aplicarCorDireto('border')">
 
+            <label>Tamanho do QR:</label>
+            <input type="range" id="size" min="100" max="230" value="150">
+
             <label>Texto abaixo do QR:</label>
             <input type="text" id="qr-text" placeholder="Ex: Escaneie aqui">
 
@@ -89,9 +92,6 @@
                 </select>
             </div>
 
-            <label>Tamanho da Fonte:</label>
-            <input type="range" id="font-size" min="14" max="24" value="17">
-
             <label>Espessura da borda:</label>
             <input type="range" id="border-size" min="0" max="20" value="2">
 
@@ -104,9 +104,6 @@
                 <option value="dots">Pontos</option>
                 <option value="rounded">Arredondado</option>
             </select>
-
-            <label>Tamanho do QR:</label>
-            <input type="range" id="size" min="100" max="230" value="150">
 
             <div class="logo-controls">
                 <label>Adicionar Logo:</label>
